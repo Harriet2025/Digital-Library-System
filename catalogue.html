@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogue — DigiLibrary</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="container section-tight">
+      <h1>Book Catalogue</h1>
+      <p class="text-muted">Search and filter course materials, novels, and every other e-book in the collection.</p>
+
+      <div class="filter-bar">
+        <div class="form-group search-group">
+          <label for="search-input">Search</label>
+          <input type="text" id="search-input" placeholder="Search by title or author...">
+        </div>
+        <div class="form-group">
+          <label for="category-filter">Category</label>
+          <select id="category-filter">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="sort-select">Sort By</label>
+          <select id="sort-select">
+            <option value="newest">Newest First</option>
+            <option value="title">Title (A–Z)</option>
+            <option value="author">Author (A–Z)</option>
+          </select>
+        </div>
+        <div class="filter-check">
+          <input type="checkbox" id="available-only">
+          <label for="available-only">Available only</label>
+        </div>
+      </div>
+
+      <div id="results-count" class="text-muted" style="margin-bottom: 16px;"></div>
+      <div class="grid book-grid" id="book-grid"></div>
+      <div id="no-results" class="text-center text-muted" style="display:none; padding: 40px 0;">
+        No books match your search. Try a different keyword or filter.
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/catalogue.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — DigiLibrary</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="container">
+      <div class="form-card">
+        <h2 class="text-center">Welcome Back</h2>
+        <p class="text-center text-muted">Log in to borrow books and view your dashboard.</p>
+
+        <div id="login-alert" class="alert"></div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        </form>
+
+        <p class="text-center text-muted" style="margin-top:16px;">
+          Don't have an account? <a href="register.html">Register here</a>
+        </p>
+
+        <div class="demo-box">
+          <strong>Demo accounts</strong><br>
+          Admin: <code>admin@library.edu</code> / <code>admin123</code><br>
+          Student: <code>student@library.edu</code> / <code>student123</code>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

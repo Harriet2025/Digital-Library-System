@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigiLibrary — Digital Library System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy fade-in-up">
+          <h1>Course materials, novels, and e-books — all in one place.</h1>
+          <p>DigiLibrary lets students search the catalogue, borrow and return digital books online — from textbooks to fiction — while admins manage uploads and track borrowing activity.</p>
+          <div class="hero-actions">
+            <a href="catalogue.html" class="btn btn-accent">Browse Catalogue</a>
+            <a href="register.html" class="btn btn-outline">Create an Account</a>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <div class="hero-stat-value" id="stat-book-count">—</div>
+              <div class="hero-stat-label">Titles</div>
+            </div>
+            <div>
+              <div class="hero-stat-value" id="stat-category-count">—</div>
+              <div class="hero-stat-label">Categories</div>
+            </div>
+            <div>
+              <div class="hero-stat-value">24/7</div>
+              <div class="hero-stat-label">Catalogue Access</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-art fade-in-up" style="animation-delay:0.1s;">
+          <svg viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <ellipse cx="110" cy="176" rx="80" ry="10" fill="#0d1b2c"/>
+            <g>
+              <path d="M110 55 C90 40 55 34 25 40 V140 C55 134 90 140 110 155 Z" fill="#e08a2e" opacity="0.9"/>
+              <path d="M110 55 C130 40 165 34 195 40 V140 C165 134 130 140 110 155 Z" fill="#f5c98a"/>
+              <path d="M110 55 V155" stroke="#0d1b2c" stroke-width="2"/>
+              <path d="M35 55 L100 62" stroke="#0d1b2c" stroke-width="1.4" opacity="0.35"/>
+              <path d="M35 75 L100 82" stroke="#0d1b2c" stroke-width="1.4" opacity="0.35"/>
+              <path d="M35 95 L100 100" stroke="#0d1b2c" stroke-width="1.4" opacity="0.35"/>
+              <path d="M120 62 L185 55" stroke="#0d1b2c" stroke-width="1.4" opacity="0.25"/>
+              <path d="M120 82 L185 75" stroke="#0d1b2c" stroke-width="1.4" opacity="0.25"/>
+              <path d="M120 100 L185 95" stroke="#0d1b2c" stroke-width="1.4" opacity="0.25"/>
+            </g>
+            <circle cx="30" cy="30" r="4" fill="#f5c98a"/>
+            <circle cx="190" cy="120" r="3" fill="#f5c98a"/>
+            <circle cx="15" cy="120" r="3" fill="#e08a2e"/>
+          </svg>
+        </div>
+      </div>
+      <svg class="hero-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,32 C240,60 480,4 720,20 C960,36 1200,60 1440,28 L1440,60 L0,60 Z"></path>
+      </svg>
+    </section>
+
+    <section class="section container">
+      <h2 class="text-center">Everything the library needs</h2>
+      <p class="text-center text-muted">Built for students and administrators alike.</p>
+      <div class="grid features-grid stagger">
+        <div class="feature-card">
+          <div class="icon">🔐</div>
+          <h3>User Authentication</h3>
+          <p class="text-muted">Students register and log in securely to borrow books and track their history.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📖</div>
+          <h3>Digital Catalogue</h3>
+          <p class="text-muted">Browse a growing collection of e-books and course materials across categories.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔍</div>
+          <h3>Search &amp; Filter</h3>
+          <p class="text-muted">Quickly find titles by name, author, category, or availability.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔄</div>
+          <h3>Borrow &amp; Return</h3>
+          <p class="text-muted">Request any available copy, get approved by your librarian, and return it when you're done.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🛠️</div>
+          <h3>Admin Management</h3>
+          <p class="text-muted">Admins upload new books, edit the catalogue, and monitor borrowing activity.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📊</div>
+          <h3>Activity Tracking</h3>
+          <p class="text-muted">Live stats on borrowed, overdue, and returned books at a glance.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="flex-between">
+        <h2 class="mb-0">Recently Added</h2>
+        <a href="catalogue.html">View full catalogue &rarr;</a>
+      </div>
+      <div class="grid book-grid stagger" id="featured-books" style="margin-top: 20px;"></div>
+    </section>
+
+    <section class="section container">
+      <h2 class="mb-0">Popular Books</h2>
+      <p class="text-muted">The most borrowed and highest-rated titles in the library.</p>
+      <div class="grid book-grid stagger" id="popular-books" style="margin-top: 20px;"></div>
+    </section>
+
+    <section class="section container" id="recommended-section" style="display:none;">
+      <h2 class="mb-0">Recommended For You</h2>
+      <p class="text-muted">Based on what you've borrowed and favorited.</p>
+      <div class="grid book-grid stagger" id="recommended-books" style="margin-top: 20px;"></div>
+    </section>
+
+    <section class="section container" id="recently-viewed-section" style="display:none;">
+      <h2 class="mb-0">Recently Viewed</h2>
+      <div class="grid book-grid stagger" id="recently-viewed-books" style="margin-top: 20px;"></div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

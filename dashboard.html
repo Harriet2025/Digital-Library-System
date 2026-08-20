@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard — DigiLibrary</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="container section-tight">
+      <h1>My Dashboard</h1>
+
+      <div class="profile-card" id="profile-card"></div>
+
+      <div class="grid stats-grid" id="stats-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
+
+      <h2>My Borrow Requests</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Requested On</th>
+              <th>Status</th>
+              <th>Reviewed On</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody id="requests-table"></tbody>
+        </table>
+      </div>
+
+      <h2>Currently Borrowed</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Category</th>
+              <th>Borrowed On</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Reading Progress</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="current-borrows"></tbody>
+        </table>
+      </div>
+
+      <div class="flex-between">
+        <h2 class="mb-0">My Favorites</h2>
+      </div>
+      <div class="grid book-grid" id="favorites-grid" style="margin: 16px 0 32px;"></div>
+
+      <h2>Borrowing History</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Category</th>
+              <th>Borrowed On</th>
+              <th>Returned On</th>
+            </tr>
+          </thead>
+          <tbody id="borrow-history"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

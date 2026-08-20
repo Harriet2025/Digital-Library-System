@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — DigiLibrary</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="container section-tight">
+      <h1>Admin Panel</h1>
+
+      <div class="grid stats-grid" id="stats-grid"></div>
+
+      <h2>Borrowing Requests</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Book</th>
+              <th>Requested On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="requests-table"></tbody>
+        </table>
+      </div>
+
+      <div class="flex-between">
+        <h2 class="mb-0">Manage Book Catalogue</h2>
+        <button class="btn btn-primary" id="add-book-btn">+ Add New Book</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Category</th>
+              <th>Format</th>
+              <th>Copies (Avail/Total)</th>
+              <th>E-book File</th>
+              <th>Added</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="books-table"></tbody>
+        </table>
+      </div>
+
+      <h2>Borrowing Activity</h2>
+      <div class="filter-bar">
+        <div class="form-group search-group">
+          <label for="activity-search">Search</label>
+          <input type="text" id="activity-search" placeholder="Search by student or book...">
+        </div>
+        <div class="form-group">
+          <label for="activity-status">Status</label>
+          <select id="activity-status">
+            <option value="">All Statuses</option>
+            <option value="borrowed">Borrowed</option>
+            <option value="overdue">Overdue</option>
+            <option value="returned">Returned</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Book</th>
+              <th>Borrowed On</th>
+              <th>Due Date</th>
+              <th>Returned On</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="activity-table"></tbody>
+        </table>
+      </div>
+
+      <h2>Reviews &amp; Ratings</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Student</th>
+              <th>Rating</th>
+              <th>Review</th>
+              <th>Posted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reviews-table"></tbody>
+        </table>
+      </div>
+
+      <h2>Manage Categories</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Books</th>
+              <th>Rename</th>
+            </tr>
+          </thead>
+          <tbody id="categories-table"></tbody>
+        </table>
+      </div>
+
+      <h2>Send Announcement</h2>
+      <div class="form-card" style="margin: 0 0 32px;">
+        <div id="announcement-alert" class="alert"></div>
+        <form id="announcement-form" novalidate>
+          <div class="form-group">
+            <label for="announcement-text">Message to all students</label>
+            <textarea id="announcement-text" placeholder="e.g. The library will be closed this Friday for maintenance." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send to All Students</button>
+        </form>
+      </div>
+
+      <h2>Registered Students</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Joined</th>
+              <th>Currently Borrowed</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="students-table"></tbody>
+        </table>
+      </div>
+
+      <h2>Library Insights</h2>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-bottom: 32px;">
+        <div>
+          <h3>Most Borrowed Books</h3>
+          <div id="most-borrowed-list" class="insight-list"></div>
+        </div>
+        <div>
+          <h3>Most Active Students</h3>
+          <div id="most-active-list" class="insight-list"></div>
+        </div>
+        <div>
+          <h3>Recently Added Books</h3>
+          <div id="recent-books-list" class="insight-list"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <!-- Add / Edit Book Modal -->
+  <div class="modal-overlay" id="book-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="mb-0" id="modal-title">Add New Book</h3>
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div id="book-form-alert" class="alert"></div>
+      <form id="book-form" novalidate>
+        <input type="hidden" id="book-id">
+        <div class="form-group">
+          <label for="book-title">Title</label>
+          <input type="text" id="book-title" required>
+        </div>
+        <div class="form-group">
+          <label for="book-author">Author</label>
+          <input type="text" id="book-author" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="book-category">Category</label>
+            <input type="text" id="book-category" list="category-list" required>
+            <datalist id="category-list"></datalist>
+          </div>
+          <div class="form-group">
+            <label for="book-format">Format</label>
+            <select id="book-format">
+              <option value="PDF">PDF</option>
+              <option value="EPUB">EPUB</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="book-description">Description</label>
+          <textarea id="book-description" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="book-isbn">ISBN</label>
+            <input type="text" id="book-isbn" placeholder="978-0-000-00000-0">
+          </div>
+          <div class="form-group">
+            <label for="book-publisher">Publisher</label>
+            <input type="text" id="book-publisher">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="book-pub-date">Publication Date</label>
+            <input type="date" id="book-pub-date">
+          </div>
+          <div class="form-group">
+            <label for="book-pages">Number of Pages</label>
+            <input type="number" id="book-pages" min="1">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="book-copies">Total Copies</label>
+          <input type="number" id="book-copies" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+          <label for="book-cover">Cover Image (optional)</label>
+          <input type="file" id="book-cover" accept="image/*">
+          <div class="form-hint">Leave blank to use an auto-generated cover.</div>
+        </div>
+        <div class="form-group">
+          <label for="book-file">E-book File (PDF or EPUB)</label>
+          <input type="file" id="book-file" accept=".pdf,.epub">
+          <div class="form-hint" id="current-file-hint">Uploaded here becomes downloadable to students once they borrow the book.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="book-form-submit">Save Book</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

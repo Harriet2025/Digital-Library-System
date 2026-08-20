@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — DigiLibrary</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="container">
+      <div class="form-card form-card-wide">
+        <h2 class="text-center">Create Your Account</h2>
+        <p class="text-center text-muted">Register as a student to start borrowing books.</p>
+
+        <div id="register-alert" class="alert"></div>
+
+        <form id="register-form" novalidate>
+          <div class="form-group">
+            <label>I am registering as</label>
+            <div class="role-options">
+              <label class="role-card">
+                <input type="radio" name="role" value="student" checked>
+                <span class="role-icon">🎓</span>
+                <span class="role-text">
+                  <strong>Student / User</strong>
+                  <span class="text-muted">Browse and borrow books</span>
+                </span>
+              </label>
+              <label class="role-card">
+                <input type="radio" name="role" value="admin">
+                <span class="role-icon">🗝️</span>
+                <span class="role-text">
+                  <strong>Librarian / Administrator</strong>
+                  <span class="text-muted">Manage the catalogue</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="new-password">
+            <div class="form-hint">At least 6 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" required autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+        </form>
+
+        <p class="text-center text-muted" style="margin-top:16px;">
+          Already have an account? <a href="login.html">Log in</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/register.js"></script>
+</body>
+</html>
