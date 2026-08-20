@@ -4,6 +4,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap');
 
+
+
+
+
+
+
 :root {
   --color-primary: #1e3a5f;
   --color-primary-light: #2c5282;
@@ -360,4 +366,66 @@ tbody tr:hover { background: var(--color-surface-alt); }
   .book-details .cover { max-width: 220px; }
   .hero-copy h1 { font-size: 1.9rem; }
   .role-options { grid-template-columns: 1fr; }
+}
+
+
+
+
+
+@media (max-width: 768px) {
+  .nav-toggle { display: block; }
+  .nav-links { display: none; width: 100%; flex-direction: column; align-items: flex-start; gap: 2px; order: 3; margin: 10px 0 0; }
+  .nav-links.open { display: flex; }
+  .nav-auth { margin-left: 0; }
+  .book-details { grid-template-columns: 1fr; }
+  .book-details .cover { max-width: 220px; }
+  .hero-copy h1 { font-size: 1.9rem; }
+  .role-options { grid-template-columns: 1fr; }
+
+  /* --- Mobile: 2-column book grid --- */
+  .book-grid,
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+  .book-card .cover-wrap .favorite-btn { width: 28px; height: 28px; font-size: 0.9rem; }
+  .book-card .book-body { padding: 10px 12px; gap: 4px; }
+  .book-card .book-title { font-size: 0.88rem; line-height: 1.25; }
+  .book-card .book-author { font-size: 0.75rem; }
+  .book-card .card-rating { font-size: 0.72rem; }
+  .book-card .book-meta { gap: 4px; }
+  .book-card .book-meta .badge { font-size: 0.6rem; padding: 2px 7px; }
+  .book-card .book-actions { flex-direction: column; padding: 0 12px 12px; gap: 6px; }
+  .book-card .book-actions .btn { width: 100%; }
+
+  /* --- General mobile tightening --- */
+  .container { padding: 0 14px; }
+  .section { padding: 34px 0; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+
+  .hero { padding: 48px 0 64px; }
+  .hero-stats { gap: 18px; }
+  .hero-actions { flex-direction: column; }
+  .hero-actions .btn { width: 100%; }
+
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-bar .form-group { min-width: 0; }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .spec-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .form-card { padding: 22px; margin: 24px auto; }
+  .form-row { flex-direction: column; gap: 0; }
+
+  .modal { padding: 20px; }
+
+  .notif-panel { width: min(320px, calc(100vw - 40px)); right: -10px; }
+
+  table { min-width: 560px; }
+}
+
+@media (max-width: 420px) {
+  .book-grid { grid-template-columns: 1fr !important; }
+  .stats-grid { grid-template-columns: 1fr !important; }
 }
