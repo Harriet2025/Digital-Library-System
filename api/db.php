@@ -1,10 +1,11 @@
 <?php
-$host = "localhost";
+$host = "hopper.proxy.rlwy.net";
 $dbname = "dlib";
 $user = "root";
-$pass = "phenyl";
+$pass = "jKtwGJmJGWjLAMeejvIPZTxBiIyhGIxn";
+$port = 38500;
 
-$conn = new mysqli($host, $user, $pass, $dbname);
+$conn = new mysqli($host, $user, $pass, $dbname, $port);
 if ($conn->connect_error) {
     http_response_code(500);
     die(json_encode(["error" => "Database connection failed"]));
