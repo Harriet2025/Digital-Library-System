@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  await DLib.init();
   renderHeader();
   renderFooter();
 
@@ -7,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  document.getElementById('login-form').addEventListener('submit', function (e) {
+  document.getElementById('login-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     hideAlert('login-alert');
 
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
-    const result = DLib.loginUser(email, password);
+    const result = await DLib.loginUser(email, password);
     if (!result.ok) {
       showAlert('login-alert', result.message, 'error');
       return;

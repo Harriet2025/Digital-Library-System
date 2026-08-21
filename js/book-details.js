@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  await DLib.init();
   renderHeader('catalogue');
   renderFooter();
   render();

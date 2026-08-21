@@ -26,6 +26,9 @@ const DLib = (function () {
     return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
 
+  let booksCache = null;
+  let usersCache = null;
+
   function read(key, fallback) {
     const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : fallback;
@@ -47,62 +50,6 @@ const DLib = (function () {
       localStorage.removeItem(KEYS.books);
       localStorage.removeItem(KEYS.records);
       localStorage.setItem(KEYS.seedVersion, SEED_VERSION);
-    }
-
-    if (!localStorage.getItem(KEYS.users)) {
-      write(KEYS.users, [
-        { id: 'u_admin', name: 'Library Admin', email: 'admin@library.edu', password: 'admin123', role: 'admin', joinedDate: daysFromNow(-120) },
-        { id: 'u_demo', name: 'Ama Serwaa', email: 'student@library.edu', password: 'student123', role: 'student', joinedDate: daysFromNow(-60) },
-        { id: 'u_kwame', name: 'Kwame Boateng', email: 'kwame.boateng@student.edu', password: 'student123', role: 'student', joinedDate: daysFromNow(-52) },
-        { id: 'u_abena', name: 'Abena Owusu', email: 'abena.owusu@student.edu', password: 'student123', role: 'student', joinedDate: daysFromNow(-30) }
-      ]);
-    } else {
-      // Migration: add the demo reviewer accounts for browsers seeded
-      // before reviews existed, so seeded reviews have a real author.
-      const users = read(KEYS.users, []);
-      let changed = false;
-      [
-        { id: 'u_kwame', name: 'Kwame Boateng', email: 'kwame.boateng@student.edu', password: 'student123', role: 'student', joinedDate: daysFromNow(-52) },
-        { id: 'u_abena', name: 'Abena Owusu', email: 'abena.owusu@student.edu', password: 'student123', role: 'student', joinedDate: daysFromNow(-30) }
-      ].forEach(function (demoUser) {
-        if (!users.some(u => u.id === demoUser.id)) {
-          users.push(demoUser);
-          changed = true;
-        }
-      });
-      if (changed) write(KEYS.users, users);
-    }
-
-    if (!localStorage.getItem(KEYS.books)) {
-      write(KEYS.books, [
-        // Course materials / academic
-        { id: 'bk_1', title: 'Introduction to Algorithms', author: 'T. H. Cormen', category: 'Computer Science', format: 'PDF', description: 'A comprehensive guide to algorithm design, analysis, and complexity, covering sorting, graphs, and dynamic programming.', isbn: '978-9988-01-001-4', publisher: 'MIT Academic Press', publicationDate: '2019-03-10', pages: 1312, copiesTotal: 3, copiesAvailable: 2, addedDate: daysFromNow(-90), cover: null, fileName: null, fileData: null },
-        { id: 'bk_2', title: 'Calculus: Early Transcendentals', author: 'James Stewart', category: 'Mathematics', format: 'PDF', description: 'Core calculus concepts including limits, derivatives, integrals, and series with worked examples.', isbn: '978-9988-01-002-1', publisher: 'Cengage Learning', publicationDate: '2020-01-15', pages: 1368, copiesTotal: 2, copiesAvailable: 1, addedDate: daysFromNow(-85), cover: null, fileName: null, fileData: null },
-        { id: 'bk_3', title: 'Principles of Marketing', author: 'Philip Kotler', category: 'Business', format: 'EPUB', description: 'An introduction to marketing strategy, consumer behaviour, branding, and digital marketing channels.', isbn: '978-9988-01-003-8', publisher: 'Pearson Education', publicationDate: '2021-06-01', pages: 716, copiesTotal: 4, copiesAvailable: 4, addedDate: daysFromNow(-70), cover: null, fileName: null, fileData: null },
-        { id: 'bk_4', title: 'Clean Code', author: 'Robert C. Martin', category: 'Computer Science', format: 'PDF', description: 'A handbook of agile software craftsmanship focused on writing readable, maintainable code.', isbn: '978-9988-01-004-5', publisher: 'Prentice Hall', publicationDate: '2018-08-01', pages: 464, copiesTotal: 2, copiesAvailable: 0, addedDate: daysFromNow(-65), cover: null, fileName: null, fileData: null },
-        { id: 'bk_5', title: 'Fundamentals of Database Systems', author: 'Elmasri & Navathe', category: 'Computer Science', format: 'PDF', description: 'Covers relational databases, SQL, normalization, transactions, and database design.', isbn: '978-9988-01-005-2', publisher: 'Addison-Wesley', publicationDate: '2020-02-20', pages: 1242, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-55), cover: null, fileName: null, fileData: null },
-        { id: 'bk_6', title: 'Engineering Mechanics: Statics', author: 'R. C. Hibbeler', category: 'Engineering', format: 'PDF', description: 'Foundational statics concepts for engineering students, including forces, equilibrium, and trusses.', isbn: '978-9988-01-006-9', publisher: 'Wiley', publicationDate: '2019-05-05', pages: 640, copiesTotal: 2, copiesAvailable: 2, addedDate: daysFromNow(-50), cover: null, fileName: null, fileData: null },
-        { id: 'bk_8', title: 'Organic Chemistry Essentials', author: 'Paula Bruice', category: 'Science', format: 'PDF', description: 'An accessible introduction to organic chemistry structures, reactions, and mechanisms.', isbn: '978-9988-01-008-3', publisher: 'Oxford University Press', publicationDate: '2017-09-12', pages: 812, copiesTotal: 2, copiesAvailable: 2, addedDate: daysFromNow(-35), cover: null, fileName: null, fileData: null },
-        { id: 'bk_9', title: 'Financial Accounting Basics', author: 'Jerry J. Weygandt', category: 'Business', format: 'PDF', description: 'Introduces financial statements, bookkeeping principles, and accounting cycles for beginners.', isbn: '978-9988-01-009-0', publisher: 'Wiley', publicationDate: '2021-01-08', pages: 592, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-30), cover: null, fileName: null, fileData: null },
-        { id: 'bk_10', title: 'Data Communications and Networking', author: 'Behrouz Forouzan', category: 'Computer Science', format: 'PDF', description: 'Explores networking fundamentals, protocols, the OSI model, and network security basics.', isbn: '978-9988-01-010-6', publisher: 'McGraw-Hill', publicationDate: '2018-04-22', pages: 1176, copiesTotal: 2, copiesAvailable: 2, addedDate: daysFromNow(-25), cover: null, fileName: null, fileData: null },
-        { id: 'bk_11', title: 'Introduction to Psychology', author: 'David G. Myers', category: 'Science', format: 'EPUB', description: 'A survey of core psychological concepts including cognition, development, and behaviour.', isbn: '978-9988-01-011-3', publisher: 'Worth Publishers', publicationDate: '2019-10-01', pages: 768, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-20), cover: null, fileName: null, fileData: null },
-        { id: 'bk_12', title: 'Graphic Design: The New Basics', author: 'Ellen Lupton', category: 'Arts & Design', format: 'PDF', description: 'A visual guide to design fundamentals: layout, typography, colour, and composition.', isbn: '978-9988-01-012-0', publisher: 'Princeton Architectural Press', publicationDate: '2015-03-01', pages: 240, copiesTotal: 2, copiesAvailable: 2, addedDate: daysFromNow(-15), cover: null, fileName: null, fileData: null },
-        { id: 'bk_13', title: 'Web Technologies with PHP and JavaScript', author: 'Group 2 Press', category: 'Computer Science', format: 'PDF', description: 'A practical guide to building dynamic web applications with HTML, CSS, JavaScript, and PHP.', isbn: '978-9988-01-013-7', publisher: 'Group 2 Press', publicationDate: '2026-01-15', pages: 386, copiesTotal: 4, copiesAvailable: 4, addedDate: daysFromNow(-10), cover: null, fileName: null, fileData: null },
-
-        // Fiction & general-interest reading
-        { id: 'bk_7', title: 'Things Fall Apart', author: 'Chinua Achebe', category: 'Literature', format: 'EPUB', description: 'A classic novel depicting pre-colonial life in Nigeria and the arrival of European colonialism.', isbn: '978-9988-01-007-6', publisher: 'Heinemann African Writers Series', publicationDate: '1994-11-01', pages: 209, copiesTotal: 5, copiesAvailable: 5, addedDate: daysFromNow(-40), cover: null, fileName: null, fileData: null },
-        { id: 'bk_14', title: 'African History: A Concise Introduction', author: 'Kwame Nimako', category: 'History', format: 'EPUB', description: 'A concise overview of major events and movements across African history.', isbn: '978-9988-01-014-4', publisher: 'Sub-Saharan Publishers', publicationDate: '2016-07-01', pages: 328, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-5), cover: null, fileName: null, fileData: null },
-        { id: 'bk_15', title: 'The Lantern of Osu', author: 'Efua Mensah', category: 'Fiction', format: 'EPUB', description: 'A coming-of-age story set in Accra, following a young woman chasing her dreams against family expectations.', isbn: '978-9988-01-015-1', publisher: 'Nyansa House', publicationDate: '2022-05-20', pages: 284, copiesTotal: 4, copiesAvailable: 4, addedDate: daysFromNow(-48), cover: null, fileName: null, fileData: null },
-        { id: 'bk_16', title: 'Whispers of the Old Kingdom', author: 'Kwabena Osei', category: 'Fantasy', format: 'EPUB', description: 'An epic fantasy adventure through a forgotten kingdom of spirits, warriors, and ancient magic.', isbn: '978-9988-01-016-8', publisher: 'Baobab Fiction', publicationDate: '2023-02-14', pages: 352, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-42), cover: null, fileName: null, fileData: null },
-        { id: 'bk_17', title: 'The Silent Witness', author: 'Naana Boateng', category: 'Mystery & Thriller', format: 'PDF', description: 'A gripping crime thriller where a quiet witness holds the key to unravelling a city-wide conspiracy.', isbn: '978-9988-01-017-5', publisher: 'Harmattan Press', publicationDate: '2021-09-09', pages: 296, copiesTotal: 3, copiesAvailable: 2, addedDate: daysFromNow(-38), cover: null, fileName: null, fileData: null },
-        { id: 'bk_18', title: 'Letters from Labadi', author: 'Adjoa Frimpong', category: 'Romance', format: 'EPUB', description: 'A heartfelt romance told through letters exchanged between two childhood friends separated by distance.', isbn: '978-9988-01-018-2', publisher: 'Nyansa House', publicationDate: '2020-02-11', pages: 244, copiesTotal: 4, copiesAvailable: 4, addedDate: daysFromNow(-33), cover: null, fileName: null, fileData: null },
-        { id: 'bk_19', title: 'Beyond the Red Horizon', author: 'Kojo Antwi-Mensah', category: 'Science Fiction', format: 'PDF', description: 'A crew of explorers races against time on a distant red planet to uncover a secret that could save Earth.', isbn: '978-9988-01-019-9', publisher: 'Baobab Fiction', publicationDate: '2024-03-01', pages: 312, copiesTotal: 2, copiesAvailable: 2, addedDate: daysFromNow(-28), cover: null, fileName: null, fileData: null },
-        { id: 'bk_20', title: 'A Life in Motion', author: 'Sarah Owusu', category: 'Biography', format: 'PDF', description: 'The inspiring true story of an athlete who overcame injury and setbacks to reach the world stage.', isbn: '978-9988-01-020-5', publisher: 'Milestone Books', publicationDate: '2019-11-01', pages: 268, copiesTotal: 2, copiesAvailable: 2, addedDate: daysFromNow(-22), cover: null, fileName: null, fileData: null },
-        { id: 'bk_21', title: 'Small Steps, Big Change', author: 'Daniel Asante', category: 'Self-Help', format: 'EPUB', description: 'Practical, everyday habits for building discipline, focus, and confidence as a student and young professional.', isbn: '978-9988-01-021-2', publisher: 'Clear Path Publishing', publicationDate: '2022-01-10', pages: 192, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-18), cover: null, fileName: null, fileData: null },
-        { id: 'bk_22', title: 'Songs of the Harmattan', author: 'Abena Nyarko', category: 'Poetry', format: 'PDF', description: 'A poetry collection exploring home, memory, and the changing seasons of West Africa.', isbn: '978-9988-01-022-9', publisher: 'Harmattan Press', publicationDate: '2021-12-01', pages: 128, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-12), cover: null, fileName: null, fileData: null },
-        { id: 'bk_23', title: 'The Trials of Kojo', author: 'Emmanuel Darko', category: 'Adventure', format: 'EPUB', description: 'A young adventurer sets out across the Volta region on a journey full of danger, friendship, and discovery.', isbn: '978-9988-01-023-6', publisher: 'Baobab Fiction', publicationDate: '2023-08-19', pages: 302, copiesTotal: 3, copiesAvailable: 3, addedDate: daysFromNow(-8), cover: null, fileName: null, fileData: null },
-        { id: 'bk_24', title: 'Midnight in Jamestown', author: 'Naa Adjeley', category: 'Mystery & Thriller', format: 'PDF', description: 'A journalist investigating a decades-old disappearance uncovers secrets the old town wanted buried.', isbn: '978-9988-01-024-3', publisher: 'Harmattan Press', publicationDate: '2024-06-15', pages: 276, copiesTotal: 2, copiesAvailable: 2, addedDate: daysFromNow(-3), cover: null, fileName: null, fileData: null }
-      ]);
     }
 
     if (!localStorage.getItem(KEYS.records)) {
@@ -154,37 +101,43 @@ const DLib = (function () {
     }
   }
 
-  /* ---------------- Books ---------------- */
-  function getBooks() { return read(KEYS.books, []); }
-  function saveBooks(books) { write(KEYS.books, books); }
+  /* ---------------- Books (MySQL-backed via api/books.php, cached) ---------------- */
+  async function fetchBooksFromServer() {
+    const res = await fetch('api/books.php');
+    if (!res.ok) throw new Error('Failed to load books from server');
+    const books = await res.json();
+    booksCache = books;
+    write(KEYS.books, books);
+    return books;
+  }
+  function getBooks() {
+    if (booksCache) return booksCache;
+    return read(KEYS.books, []);
+  }
+  function saveBooks(books) { booksCache = books; write(KEYS.books, books); }
   function getBook(id) { return getBooks().find(b => b.id === id) || null; }
 
-  function addBook(book) {
-    const books = getBooks();
-    const newBook = {
-      id: generateId('bk'),
-      title: book.title,
-      author: book.author,
-      category: book.category,
-      format: book.format,
-      description: book.description,
-      isbn: book.isbn || '',
-      publisher: book.publisher || '',
-      publicationDate: book.publicationDate || '',
-      pages: book.pages || null,
-      copiesTotal: book.copiesTotal,
-      copiesAvailable: book.copiesTotal,
-      addedDate: new Date().toISOString().slice(0, 10),
-      cover: book.cover || null,
-      fileName: book.fileName || null,
-      fileData: book.fileData || null
-    };
-    books.unshift(newBook);
-    saveBooks(books);
+  async function addBook(book) {
+    const res = await fetch('api/books.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(book)
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Failed to add book');
+    const newBook = Object.assign({ copiesAvailable: book.copiesTotal, addedDate: new Date().toISOString().slice(0, 10) }, book, { id: data.id });
+    saveBooks(getBooks().concat([newBook]));
     return newBook;
   }
 
-  function updateBook(id, updates) {
+  async function updateBook(id, updates) {
+    const res = await fetch('api/books.php', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ id: id }, updates))
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Failed to update book');
     const books = getBooks();
     const idx = books.findIndex(b => b.id === id);
     if (idx === -1) return null;
@@ -193,22 +146,15 @@ const DLib = (function () {
     return books[idx];
   }
 
-  function deleteBook(id) {
+  async function deleteBook(id) {
+    const res = await fetch('api/books.php?id=' + id, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Failed to delete book');
     saveBooks(getBooks().filter(b => b.id !== id));
-    saveRecords(getRecords().filter(r => r.bookId !== id));
-    write(KEYS.reviews, read(KEYS.reviews, []).filter(r => r.bookId !== id));
   }
 
   function getCategories() {
     return Array.from(new Set(getBooks().map(b => b.category))).sort();
-  }
-
-  function getRelatedBooks(book, limit) {
-    limit = limit || 4;
-    const books = getBooks().filter(b => b.id !== book.id);
-    const sameCategory = books.filter(b => b.category === book.category);
-    const others = books.filter(b => b.category !== book.category);
-    return sameCategory.concat(others).slice(0, limit);
   }
 
   /* ---------------- Cover images ---------------- */
@@ -227,16 +173,78 @@ const DLib = (function () {
     return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
   }
 
+  function getRelatedBooks(book, limit) {
+    limit = limit || 4;
+    if (!book) return [];
+    return getBooks()
+      .filter(function (b) { return b.id !== book.id && b.category === book.category; })
+      .slice(0, limit);
+  }
+
   function getCoverImage(book) {
     return book.cover || placeholderCover(book.title, book.category);
   }
 
-  /* ---------------- Users ---------------- */
-  function getUsers() { return read(KEYS.users, []); }
-  function saveUsers(users) { write(KEYS.users, users); }
+  /* ---------------- Users (MySQL-backed via api/users.php + api/auth.php) ---------------- */
+  async function fetchUsersFromServer() {
+    const res = await fetch('api/users.php');
+    if (!res.ok) throw new Error('Failed to load users from server');
+    const users = await res.json();
+    usersCache = users;
+    write(KEYS.users, users);
+    return users;
+  }
+  function getUsers() {
+    if (usersCache) return usersCache;
+    return read(KEYS.users, []);
+  }
+  function saveUsers(users) { usersCache = users; write(KEYS.users, users); }
   function getUserById(id) { return getUsers().find(u => u.id === id) || null; }
   function getUserByEmail(email) {
-    return getUsers().find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+    return getUsers().find(u => u.email.toLowerCase() === String(email).toLowerCase()) || null;
+  }
+
+  async function init() {
+    await Promise.all([fetchBooksFromServer(), fetchUsersFromServer()]);
+    seed();
+  }
+
+  async function loginUser(email, password) {
+    const res = await fetch('api/auth.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      return { ok: false, message: data.error || 'Invalid email or password.' };
+    }
+    setCurrentUser(data.user.id);
+    if (!getUsers().some(u => u.id === data.user.id)) saveUsers(getUsers().concat([data.user]));
+    return { ok: true, user: data.user };
+  }
+
+  async function registerUser(name, email, password, role) {
+    if (!name || !email || !password) return { ok: false, message: 'All fields are required.' };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, message: 'Please enter a valid email address.' };
+    if (password.length < 6) return { ok: false, message: 'Password must be at least 6 characters.' };
+
+    const res = await fetch('api/users.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, role: role === 'admin' ? 'admin' : 'student' })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) return { ok: false, message: data.error || 'Registration failed.' };
+    saveUsers(getUsers().concat([data.user]));
+    setCurrentUser(data.user.id);
+    return { ok: true, user: data.user };
+  }
+
+  async function deleteUserRemote(id) {
+    const res = await fetch('api/users.php?id=' + id, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Failed to delete user');
   }
 
   /* ---------------- Session ---------------- */
@@ -500,7 +508,8 @@ const DLib = (function () {
   }
 
   /* ---------------- User management ---------------- */
-  function deleteUser(userId) {
+  async function deleteUser(userId) {
+    await deleteUserRemote(userId);
     saveUsers(getUsers().filter(u => u.id !== userId));
     saveRecords(getRecords().filter(r => r.userId !== userId));
     saveRequests(getRequests().filter(r => r.userId !== userId));
@@ -660,9 +669,9 @@ const DLib = (function () {
   }
 
   return {
-    seed, generateId,
+    seed, generateId, init,
     getBooks, saveBooks, getBook, addBook, updateBook, deleteBook, getCategories, getCoverImage, getRelatedBooks,
-    getUsers, saveUsers, getUserById, getUserByEmail, deleteUser,
+    getUsers, saveUsers, getUserById, getUserByEmail, loginUser, registerUser, deleteUser,
     getCurrentUser, setCurrentUser, clearCurrentUser,
     getRecords, saveRecords, getRecordStatus, getUserRecords, isBorrowedByUser, returnBook,
     getRequests, getUserRequests, getPendingRequests, hasPendingRequest, requestBorrow, approveRequest, rejectRequest,
@@ -677,4 +686,3 @@ const DLib = (function () {
   };
 })();
 
-DLib.seed();

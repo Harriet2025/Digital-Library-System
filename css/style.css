@@ -426,6 +426,5 @@ tbody tr:hover { background: var(--color-surface-alt); }
 }
 
 @media (max-width: 420px) {
-  .book-grid { grid-template-columns: 1fr !important; }
   .stats-grid { grid-template-columns: 1fr !important; }
 }

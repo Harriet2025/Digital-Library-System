@@ -1,8 +1,9 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  await DLib.init();
   renderHeader('catalogue');
   renderFooter();
-  populateCategories();
-  applyFilters();
+  await populateCategories();
+  await applyFilters();
 
   document.getElementById('search-input').addEventListener('input', applyFilters);
   document.getElementById('category-filter').addEventListener('change', applyFilters);
@@ -10,9 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('available-only').addEventListener('change', applyFilters);
 });
 
-function populateCategories() {
+async function populateCategories() {
   const select = document.getElementById('category-filter');
-  DLib.getCategories().forEach(function (category) {
+  const categories = await DLib.getCategories();
+  categories.forEach(function (category) {
     const option = document.createElement('option');
     option.value = category;
     option.textContent = category;
@@ -20,13 +22,13 @@ function populateCategories() {
   });
 }
 
-function applyFilters() {
+async function applyFilters() {
   const query = document.getElementById('search-input').value.trim().toLowerCase();
   const category = document.getElementById('category-filter').value;
   const sortBy = document.getElementById('sort-select').value;
   const availableOnly = document.getElementById('available-only').checked;
 
-  let books = DLib.getBooks();
+  let books = await DLib.getBooks();
 
   if (query) {
     books = books.filter(function (b) {

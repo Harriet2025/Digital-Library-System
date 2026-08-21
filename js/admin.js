@@ -2,7 +2,8 @@ let pendingCoverData = null;
 let pendingFileData = null;
 let pendingFileName = null;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  await DLib.init();
   const admin = DLib.requireAuth('admin');
   if (!admin) return;
 
@@ -98,11 +99,11 @@ function renderBooksTable() {
     btn.addEventListener('click', function () { openBookModal(btn.getAttribute('data-edit')); });
   });
   tbody.querySelectorAll('[data-delete]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', async function () {
       const book = DLib.getBook(btn.getAttribute('data-delete'));
       if (!book) return;
       if (confirm('Delete "' + book.title + '"? This also removes its borrowing records.')) {
-        DLib.deleteBook(book.id);
+        await DLib.deleteBook(book.id);
         refreshAll();
       }
     });
@@ -177,7 +178,7 @@ function handleBookFileChange(e) {
   reader.readAsDataURL(file);
 }
 
-function handleBookFormSubmit(e) {
+async function handleBookFormSubmit(e) {
   e.preventDefault();
   hideAlert('book-form-alert');
 
@@ -198,25 +199,30 @@ function handleBookFormSubmit(e) {
     return;
   }
 
-  if (id) {
-    const existing = DLib.getBook(id);
-    const borrowedCount = existing.copiesTotal - existing.copiesAvailable;
-    const newAvailable = Math.max(0, copiesTotal - borrowedCount);
-    DLib.updateBook(id, {
-      title, author, category, format, description,
-      isbn, publisher, publicationDate, pages,
-      copiesTotal, copiesAvailable: newAvailable,
-      cover: pendingCoverData,
-      fileName: pendingFileName,
-      fileData: pendingFileData
-    });
-  } else {
-    const newBook = DLib.addBook({
-      title, author, category, format, description,
-      isbn, publisher, publicationDate, pages, copiesTotal,
-      cover: pendingCoverData, fileName: pendingFileName, fileData: pendingFileData
-    });
-    DLib.notifyAllStudents('new-book', 'New book added to the catalogue: "' + newBook.title + '".', newBook.id);
+  try {
+    if (id) {
+      const existing = DLib.getBook(id);
+      const borrowedCount = existing.copiesTotal - existing.copiesAvailable;
+      const newAvailable = Math.max(0, copiesTotal - borrowedCount);
+      await DLib.updateBook(id, {
+        title, author, category, format, description,
+        isbn, publisher, publicationDate, pages,
+        copiesTotal, copiesAvailable: newAvailable,
+        cover: pendingCoverData,
+        fileName: pendingFileName,
+        fileData: pendingFileData
+      });
+    } else {
+      const newBook = await DLib.addBook({
+        title, author, category, format, description,
+        isbn, publisher, publicationDate, pages, copiesTotal,
+        cover: pendingCoverData, fileName: pendingFileName, fileData: pendingFileData
+      });
+      DLib.notifyAllStudents('new-book', 'New book added to the catalogue: "' + newBook.title + '".', newBook.id);
+    }
+  } catch (err) {
+    showAlert('book-form-alert', err.message || 'Failed to save book.', 'error');
+    return;
   }
 
   closeBookModal();
@@ -448,11 +454,11 @@ function renderStudentsTable() {
   }).join('');
 
   tbody.querySelectorAll('[data-remove-user]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', async function () {
       const student = DLib.getUserById(btn.getAttribute('data-remove-user'));
       if (!student) return;
       if (confirm('Remove "' + student.name + '"? This deletes their account, borrow history, requests, and favorites.')) {
-        DLib.deleteUser(student.id);
+        await DLib.deleteUser(student.id);
         refreshAll();
       }
     });

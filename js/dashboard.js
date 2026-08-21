@@ -1,6 +1,7 @@
 let currentStudent = null;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  await DLib.init();
   currentStudent = DLib.requireAuth('student');
   if (!currentStudent) return;
 

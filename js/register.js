@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+  await DLib.init();
   renderHeader();
   renderFooter();
 
@@ -7,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  document.getElementById('register-form').addEventListener('submit', function (e) {
+  document.getElementById('register-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     hideAlert('register-alert');
 
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const result = DLib.registerUser(name, email, password, role);
+    const result = await DLib.registerUser(name, email, password, role);
     if (!result.ok) {
       showAlert('register-alert', result.message, 'error');
       return;
