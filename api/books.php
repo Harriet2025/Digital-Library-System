@@ -22,6 +22,8 @@ function mapBookRow($row) {
         "fileName" => $row['file_name'],
         "fileData" => $row['file_data']
     ];
+
+    
 }
 
 if ($method === 'GET') {
